@@ -146,10 +146,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=2',
-  select: 'audio/select.wav?v=2',
-  fanfare: 'audio/fanfare.wav?v=2',
-  sparkle: 'audio/sparkle.wav?v=2'
+  pop: 'audio/pop.wav?v=3',
+  select: 'audio/select.wav?v=3',
+  fanfare: 'audio/fanfare.wav?v=3',
+  sparkle: 'audio/sparkle.wav?v=3'
 };
 
 let audioUnlocked = false;
@@ -258,6 +258,43 @@ function playWebAudioFallback(type) {
       });
     }
   } catch (e) {}
+}
+
+function playBubblePlop(pitchVariation = true) {
+  if (!state.soundEnabled) return;
+  unlockAudio();
+
+  try {
+    const AudioClass = window.AudioContext || window.webkitAudioContext;
+    if (AudioClass) {
+      if (!window.__appAudioCtx) window.__appAudioCtx = new AudioClass();
+      const ctx = window.__appAudioCtx;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const now = ctx.currentTime;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+
+      // Tonos orgánicos de burbuja con variación sutil (distintos tamaños de burbujas)
+      const baseFreq = pitchVariation ? (420 + Math.random() * 240) : 460;
+      const endFreq = baseFreq * (1.6 + Math.random() * 0.35);
+
+      osc.frequency.setValueAtTime(baseFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.05);
+
+      gain.gain.setValueAtTime(0.20, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.07);
+      return;
+    }
+  } catch (e) {}
+
+  playSound('pop');
 }
 
 // ==========================================================
@@ -641,13 +678,10 @@ function setupDesignerEmojis() {
     }, 1300);
   }
 
-  let lastBurstSound = 0;
+  let lastPlopTime = 0;
+
   function burstEmojisAroundWord(e) {
-    const now = Date.now();
-    if (now - lastBurstSound > 700) {
-      lastBurstSound = now;
-      playSound('pop'); // Sonido plop orgánico y satisfactorio
-    }
+    playBubblePlop(true);
 
     const rect = designerWord.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -668,7 +702,14 @@ function setupDesignerEmojis() {
 
     designerWord.addEventListener('mousemove', (e) => {
       const now = Date.now();
-      if (now - lastSpawnTime > 150) {
+
+      // Plop rítmico y continuo mientras el mouse se desliza por la palabra
+      if (now - lastPlopTime > 115) {
+        lastPlopTime = now;
+        playBubblePlop(true);
+      }
+
+      if (now - lastSpawnTime > 140) {
         lastSpawnTime = now;
         const randomEmoji = CAREER_EMOJIS[Math.floor(Math.random() * CAREER_EMOJIS.length)];
         spawnEmoji(e.clientX, e.clientY, randomEmoji);
