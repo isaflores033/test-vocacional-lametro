@@ -146,40 +146,49 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=3',
-  select: 'audio/select.wav?v=3',
-  fanfare: 'audio/fanfare.wav?v=3',
-  sparkle: 'audio/sparkle.wav?v=3'
+  pop: 'audio/pop.wav?v=4',
+  select: 'audio/select.wav?v=4',
+  fanfare: 'audio/fanfare.wav?v=4',
+  sparkle: 'audio/sparkle.wav?v=4'
 };
 
-let audioUnlocked = false;
-
-function unlockAudio() {
-  if (audioUnlocked) return;
-  audioUnlocked = true;
-
-  try {
+function getAudioContext() {
+  if (!window.__appAudioCtx) {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (AudioContextClass) {
-      if (!window.__appAudioCtx) {
-        window.__appAudioCtx = new AudioContextClass();
-      }
-      if (window.__appAudioCtx.state === 'suspended') {
-        window.__appAudioCtx.resume().catch(() => {});
-      }
+      window.__appAudioCtx = new AudioContextClass();
+    }
+  }
+  return window.__appAudioCtx;
+}
+
+function unlockAudio() {
+  try {
+    const ctx = getAudioContext();
+    if (ctx && ctx.state !== 'running') {
+      ctx.resume().catch(() => {});
     }
   } catch (e) {}
 
-  // Priming con reproducción corta
   try {
-    const primer = new Audio(SOUND_FILES.pop);
-    primer.volume = 0.01;
-    primer.play().then(() => primer.pause()).catch(() => {});
+    if (!window.__audioPrimed) {
+      const primer = new Audio(SOUND_FILES.pop);
+      primer.volume = 0.001;
+      const p = primer.play();
+      if (p !== undefined) {
+        p.then(() => {
+          window.__audioPrimed = true;
+          primer.pause();
+        }).catch(() => {});
+      }
+    }
   } catch (e) {}
 }
 
-window.addEventListener('pointerdown', unlockAudio, { passive: true, once: false });
-window.addEventListener('keydown', unlockAudio, { passive: true, once: false });
+// Escuchar activamente todas las interacciones de mouse, teclado y pantalla táctil
+['pointerdown', 'mousedown', 'touchstart', 'touchend', 'click', 'keydown', 'mousemove', 'mouseenter', 'focus'].forEach(evt => {
+  window.addEventListener(evt, unlockAudio, { passive: true });
+});
 
 function playSound(type) {
   if (!state.soundEnabled) return;
@@ -696,7 +705,18 @@ function setupDesignerEmojis() {
   }
 
   if (designerWord) {
+    designerWord.addEventListener('pointerdown', (e) => {
+      unlockAudio();
+      burstEmojisAroundWord(e);
+    });
+
+    designerWord.addEventListener('click', (e) => {
+      unlockAudio();
+      burstEmojisAroundWord(e);
+    });
+
     designerWord.addEventListener('mouseenter', (e) => {
+      unlockAudio();
       burstEmojisAroundWord(e);
     });
 
