@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Lexend+Deca:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <!-- Canvas para lluvia de confeti celebratoria -->
@@ -37,14 +37,14 @@
             <span>Inicio</span>
           </button>
           
-          <button id="sound-toggle" class="sound-toggle-btn" title="Alternar sonido" aria-label="Alternar sonido">
+          <button id="sound-toggle" class="sound-toggle-btn" title="Sonido desactivado (clic para activar)" aria-label="Sonido desactivado (clic para activar)">
             <!-- Icono SVG de volumen activo -->
-            <svg id="sound-icon-on" class="sound-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg id="sound-icon-on" class="sound-svg" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
             </svg>
             <!-- Icono SVG de volumen silenciado -->
-            <svg id="sound-icon-off" class="sound-svg" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg id="sound-icon-off" class="sound-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <line x1="23" y1="9" x2="17" y2="15"></line>
               <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -208,6 +208,6 @@
 
   </div>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

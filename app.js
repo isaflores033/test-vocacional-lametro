@@ -138,7 +138,7 @@ const state = {
   currentStepIndex: 0,
   answers: [], // { questionIndex, selectedKey, career }
   studentName: '',
-  soundEnabled: true,
+  soundEnabled: false, // Inicia desactivado por defecto
   calculatedResult: null
 };
 
@@ -146,10 +146,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=4',
-  select: 'audio/select.wav?v=4',
-  fanfare: 'audio/fanfare.wav?v=4',
-  sparkle: 'audio/sparkle.wav?v=4'
+  pop: 'audio/pop.wav?v=5',
+  select: 'audio/select.wav?v=5',
+  fanfare: 'audio/fanfare.wav?v=5',
+  sparkle: 'audio/sparkle.wav?v=5'
 };
 
 function getAudioContext() {
@@ -843,7 +843,7 @@ document.addEventListener('DOMContentLoaded', () => {
       state.soundEnabled = !state.soundEnabled;
       updateSoundUI();
       if (state.soundEnabled) {
-        playSound('select');
+        playBubblePlop(false);
       }
     });
   }
