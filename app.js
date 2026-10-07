@@ -189,9 +189,9 @@ function playSound(type) {
   if (!src) return;
 
   try {
-    // 1. Reproducción inmediata mediante HTML5 Audio
+    // 1. Reproducción sutil e inmediata estilo Apple (volúmenes calibrados)
     const audio = new Audio(src);
-    audio.volume = type === 'sparkle' ? 0.45 : (type === 'fanfare' ? 0.95 : 0.85);
+    audio.volume = type === 'sparkle' ? 0.22 : (type === 'fanfare' ? 0.45 : (type === 'select' ? 0.35 : 0.28));
     const promise = audio.play();
 
     if (promise !== undefined) {
@@ -214,54 +214,58 @@ function playWebAudioFallback(type) {
 
     const now = ctx.currentTime;
     if (type === 'pop') {
+      // Apple iOS Haptic Tap: golpe acústico de madera/cristal, 35ms muy suave
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(480, now);
-      osc.frequency.exponentialRampToValueAtTime(880, now + 0.07);
-      gain.gain.setValueAtTime(0.4, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+      osc.frequency.setValueAtTime(720, now);
+      gain.gain.setValueAtTime(0.18, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.04);
+    } else if (type === 'select') {
+      // Apple iOS Selection / Marimba Note: acorde dual cálido y sutil (659Hz + 987Hz)
+      [659.25, 987.77].forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now);
+        gain.gain.setValueAtTime(idx === 0 ? 0.20 : 0.10, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      });
+    } else if (type === 'fanfare') {
+      // Apple AirDrop / Chord Chime: acorde mayor de cristal (D5 -> F#5 -> A5 -> D6)
+      [587.33, 739.99, 880.00, 1174.66].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        const start = now + i * 0.09;
+        osc.frequency.setValueAtTime(freq, start);
+        gain.gain.setValueAtTime(0.16, start);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.48);
+      });
+    } else if (type === 'sparkle') {
+      // Apple Glass Shimmer: nota cristalina muy discreta a 1318Hz
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1318.51, now);
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(now);
       osc.stop(now + 0.09);
-    } else if (type === 'select') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(523.25, now);
-      osc.frequency.setValueAtTime(783.99, now + 0.06);
-      gain.gain.setValueAtTime(0.4, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.17);
-    } else if (type === 'fanfare') {
-      [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        const start = now + i * 0.12;
-        osc.frequency.setValueAtTime(freq, start);
-        gain.gain.setValueAtTime(0.45, start);
-        gain.gain.exponentialRampToValueAtTime(0.001, start + 0.38);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(start);
-        osc.stop(start + 0.4);
-      });
-    } else if (type === 'sparkle') {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1100, now);
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.07);
     }
   } catch (e) {}
 }
@@ -641,19 +645,25 @@ function setupDesignerEmojis() {
     emojiEl.style.setProperty('--rot', `${rot}deg`);
 
     document.body.appendChild(emojiEl);
-    playSound('sparkle');
 
     setTimeout(() => {
       emojiEl.remove();
     }, 1300);
   }
 
+  let lastBurstSound = 0;
   function burstEmojisAroundWord(e) {
+    const now = Date.now();
+    if (now - lastBurstSound > 900) {
+      lastBurstSound = now;
+      playSound('sparkle');
+    }
+
     const rect = designerWord.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
 
-    // Lanzar ramillete de las 7 carreras
+    // Lanzar ramillete de las 7 carreras visualmente suave
     CAREER_EMOJIS.forEach((char, index) => {
       setTimeout(() => {
         spawnEmoji(centerX, centerY, char);
@@ -668,7 +678,7 @@ function setupDesignerEmojis() {
 
     designerWord.addEventListener('mousemove', (e) => {
       const now = Date.now();
-      if (now - lastSpawnTime > 120) {
+      if (now - lastSpawnTime > 150) {
         lastSpawnTime = now;
         const randomEmoji = CAREER_EMOJIS[Math.floor(Math.random() * CAREER_EMOJIS.length)];
         spawnEmoji(e.clientX, e.clientY, randomEmoji);
