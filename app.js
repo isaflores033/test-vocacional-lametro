@@ -213,59 +213,49 @@ function playWebAudioFallback(type) {
     if (ctx.state === 'suspended') ctx.resume();
 
     const now = ctx.currentTime;
-    if (type === 'pop') {
-      // Apple iOS Haptic Tap: golpe acústico de madera/cristal, 35ms muy suave
+    if (type === 'pop' || type === 'sparkle') {
+      // Clásico sonido orgánico de burbuja 'PLOP' (sube suavemente de 420Hz a 860Hz)
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(720, now);
-      gain.gain.setValueAtTime(0.18, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.exponentialRampToValueAtTime(860, now + 0.07);
+      gain.gain.setValueAtTime(0.35, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.04);
+      osc.stop(now + 0.09);
     } else if (type === 'select') {
-      // Apple iOS Selection / Marimba Note: acorde dual cálido y sutil (659Hz + 987Hz)
-      [659.25, 987.77].forEach((freq, idx) => {
+      // Tono dual armónico cálido
+      [520, 780].forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now);
-        gain.gain.setValueAtTime(idx === 0 ? 0.20 : 0.10, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.2, now + 0.06);
+        gain.gain.setValueAtTime(idx === 0 ? 0.25 : 0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(now);
-        osc.stop(now + 0.08);
+        osc.stop(now + 0.09);
       });
     } else if (type === 'fanfare') {
-      // Apple AirDrop / Chord Chime: acorde mayor de cristal (D5 -> F#5 -> A5 -> D6)
-      [587.33, 739.99, 880.00, 1174.66].forEach((freq, i) => {
+      // Acorde alegre de celebración
+      [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
-        const start = now + i * 0.09;
+        const start = now + i * 0.11;
         osc.frequency.setValueAtTime(freq, start);
-        gain.gain.setValueAtTime(0.16, start);
+        gain.gain.setValueAtTime(0.20, start);
         gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.45);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(start);
         osc.stop(start + 0.48);
       });
-    } else if (type === 'sparkle') {
-      // Apple Glass Shimmer: nota cristalina muy discreta a 1318Hz
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1318.51, now);
-      gain.gain.setValueAtTime(0.12, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.09);
     }
   } catch (e) {}
 }
@@ -654,9 +644,9 @@ function setupDesignerEmojis() {
   let lastBurstSound = 0;
   function burstEmojisAroundWord(e) {
     const now = Date.now();
-    if (now - lastBurstSound > 900) {
+    if (now - lastBurstSound > 700) {
       lastBurstSound = now;
-      playSound('sparkle');
+      playSound('pop'); // Sonido plop orgánico y satisfactorio
     }
 
     const rect = designerWord.getBoundingClientRect();

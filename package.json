@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Test vocacional interactivo para el Instituto Metropolitano de Diseño - La Metro",
   "scripts": {
-    "build": "echo 'Build complete'",
     "start": "npx serve -l 3000 .",
     "dev": "npx serve ."
   },
