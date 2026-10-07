@@ -146,10 +146,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav',
-  select: 'audio/select.wav',
-  fanfare: 'audio/fanfare.wav',
-  sparkle: 'audio/sparkle.wav'
+  pop: 'audio/pop.wav?v=2',
+  select: 'audio/select.wav?v=2',
+  fanfare: 'audio/fanfare.wav?v=2',
+  sparkle: 'audio/sparkle.wav?v=2'
 };
 
 let audioUnlocked = false;
