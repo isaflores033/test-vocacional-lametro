@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Qué tipo de diseñador eres? | La Metro</title>
+  <meta name="description" content="Descubre qué carrera de diseño es para ti. Test interactivo del Instituto Metropolitano de Diseño - La Metro.">
+  
+  <!-- Favicon oficial: Isotipo de La Metro -->
+  <link rel="icon" type="image/svg+xml" href="logo/ISO.svg">
+  
+  <!-- Google Fonts: Baloo Bhai 2 para títulos, Lexend Deca para textos e Inter para detalles sobrios -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Lexend+Deca:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Canvas para lluvia de confeti celebratoria -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- CONTENEDOR PRINCIPAL A ANCHO COMPLETO -->
+  <div class="fullwidth-app">
+
+    <!-- BARRA SUPERIOR ÚNICA -->
+    <header class="site-header">
+      <div class="header-inner">
+        <!-- Logo de La Metro: siempre lleva al inicio -->
+        <a href="#inicio" id="nav-logo-link" class="header-logo-link" title="Ir al inicio">
+          <img src="logo/LOGO HORIZONTAL.png" alt="La Metro - Instituto Metropolitano de Diseño" class="metro-header-logo">
+        </a>
+
+        <!-- Acciones en el header -->
+        <div class="header-actions">
+          <button id="btn-header-home" class="header-nav-btn" style="display: none;" title="Volver al inicio">
+            <span>Inicio</span>
+          </button>
+          
+          <button id="sound-toggle" class="sound-toggle-btn" title="Alternar sonido" aria-label="Alternar sonido">
+            <!-- Icono SVG de volumen activo -->
+            <svg id="sound-icon-on" class="sound-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <!-- Icono SVG de volumen silenciado -->
+            <svg id="sound-icon-off" class="sound-svg" style="display: none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT: PANTALLAS -->
+    <main class="site-main">
+
+      <!-- PANTALLA 1: PRESENTACIÓN LIMPIA Y CENTRADA -->
+      <section id="screen-welcome" class="screen active">
+        <div class="welcome-hero-content">
+          
+          <h1 class="main-hero-title">
+            ¿Qué tipo de <span class="highlight-designer" id="word-designer">diseñador</span> eres?
+          </h1>
+
+          <p class="hero-helper-text">
+            No hay respuestas correctas o incorrectas. Elige la opción que más vibre contigo.
+          </p>
+
+          <!-- Input para el nombre (opcional) -->
+          <div class="student-name-box">
+            <label for="student-name-input" class="name-label">¿Cómo te llamas? <span class="optional-hint">(Opcional)</span></label>
+            <input type="text" id="student-name-input" class="name-input" placeholder="Escribe tu nombre..." maxlength="30" autocomplete="given-name">
+          </div>
+
+          <!-- Botón principal de inicio -->
+          <button id="btn-start" class="btn-primary-creative">
+            <span>Empezar el test</span>
+            <svg class="btn-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+        </div>
+      </section>
+
+      <!-- PANTALLA 2: PREGUNTAS (UNA POR PÁGINA, 4 OPCIONES ESTILO IMAGEN 4) -->
+      <section id="screen-quiz" class="screen">
+        <div class="quiz-fullwidth-wrapper">
+
+          <!-- Barra superior de navegación del quiz -->
+          <div class="quiz-top-bar">
+            <button id="btn-back" class="quiz-back-btn" title="Ir a la pregunta anterior">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Atrás</span>
+            </button>
+
+            <div class="quiz-progress-center">
+              <div class="progress-track">
+                <div class="progress-fill" id="quiz-progress-fill" style="width: 16.66%;"></div>
+              </div>
+            </div>
+
+            <div class="quiz-top-spacer" aria-hidden="true"></div>
+          </div>
+
+          <!-- Pregunta -->
+          <div class="question-title-area">
+            <span class="question-kicker" id="q-kicker">Pregunta 1</span>
+            <h2 class="question-main-text" id="question-text">
+              Si te dan una hoja en blanco y te dicen “crea algo”, ¿qué te gustaría hacer?
+            </h2>
+          </div>
+
+          <!-- 4 Opciones en fila/grilla (Estilo tarjetas Image 4) -->
+          <div class="options-four-grid" id="options-container">
+            <!-- Renderizado dinámicamente desde app.js -->
+          </div>
+
+        </div>
+      </section>
+
+      <!-- PANTALLA 3: CALCULANDO -->
+      <section id="screen-calculating" class="screen">
+        <div class="calculating-fullwidth-content">
+          <div class="creative-loader-ring"></div>
+          <h2 class="calc-main-title">Analizando tus respuestas...</h2>
+          <p class="calc-sub-text">Conectando tus elecciones con las carreras de La Metro</p>
+        </div>
+      </section>
+
+      <!-- PANTALLA 4: RESULTADO -->
+      <section id="screen-result" class="screen">
+        <div class="result-fullwidth-wrapper">
+
+          <!-- Saludo en formato natural (ej. ¡Isa! Tu ADN creativo es:) -->
+          <div class="result-greeting-text" id="result-student-greeting">
+            ¡Tu ADN creativo es:
+          </div>
+
+          <!-- TÍTULO DE LA CARRERA CON ZOOM GIGANTE -->
+          <div class="winner-title-box">
+            <h1 class="winner-career-title zoom-entrance" id="winner-career-title">
+              Diseño Industrial
+            </h1>
+          </div>
+
+          <!-- Afinidad secundaria en caso de empate -->
+          <div class="secondary-affinity-pill" id="secondary-affinity-box" style="display: none;">
+            <span id="secondary-affinity-text">También tienes afinidad con: <strong>Diseño Gráfico</strong></span>
+          </div>
+
+          <!-- DOS BLOQUES UNO AL LADO DEL OTRO: DESCRIPCIÓN Y SUPERPODER -->
+          <div class="result-two-columns">
+            
+            <!-- Columna 1: Descripción del perfil -->
+            <div class="result-col-card card-description">
+              <h3 class="col-card-title">Tu perfil creativo</h3>
+              <p class="col-card-desc" id="winner-description">
+                Tu creatividad busca convertir ideas en cosas reales. Te interesa imaginar, resolver problemas, experimentar con materiales y crear productos que combinen funcionalidad, estética e innovación.
+              </p>
+            </div>
+
+            <!-- Columna 2: Superpoder -->
+            <div class="result-col-card card-superpower">
+              <h3 class="col-card-title">Tu superpoder</h3>
+              <p class="superpower-highlight" id="winner-superpower">
+                Convertir problemas en soluciones.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- PODRÍAS CREAR / DISEÑAR: EN UNA SOLA LÍNEA CON HOVER SUAVE SIN CAMBIAR DE COLOR -->
+          <div class="result-single-line-tags-section">
+            <h4 class="tags-section-heading" id="create-badge-label">Podrías diseñar</h4>
+            <div class="single-line-tags-strip" id="winner-tags-cloud">
+              <!-- Renderizado dinámico -->
+            </div>
+          </div>
+
+          <!-- BOTÓN ÚNICO: VOLVER A EMPEZAR -->
+          <div class="result-restart-area">
+            <button id="btn-restart" class="btn-restart-action">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 4 1 10 7 10"></polyline>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+              </svg>
+              <span>Volver a empezar</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER MÍNIMO INSTITUCIONAL -->
+    <footer class="site-footer">
+      <p>Instituto Metropolitano de Diseño · La Metro</p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,934 @@
+/* ==========================================================
+   ¿QUÉ TIPO DE DISEÑADOR ERES? - LA METRO
+   Diseño editorial creativo, limpio, a ancho completo (100% white)
+   ========================================================== */
+
+:root {
+  /* Colores Corporativos de La Metro */
+  --metro-red: #ea0029;
+  --metro-red-dark: #c80023;
+  --metro-red-light: #fff0f2;
+  --metro-red-glow: rgba(234, 0, 41, 0.22);
+  
+  --metro-slate: #323e48;
+  --metro-slate-dark: #1f272e;
+  --metro-slate-light: #526372;
+
+  /* Paleta Base - 100% Blanco y neutrales refinados */
+  --bg-pure: #ffffff;
+  --surface-card: #ffffff;
+  --border-light: #e5e7eb;
+  --border-hover: #cbd5e1;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+
+  /* Colores de las 4 opciones (estilo Image 4) */
+  --opt-a-bg: #fff1f2;
+  --opt-a-accent: #e11d48;
+  --opt-b-bg: #ecfdf5;
+  --opt-b-accent: #059669;
+  --opt-c-bg: #fefce8;
+  --opt-c-accent: #d97706;
+  --opt-d-bg: #f0f9ff;
+  --opt-d-accent: #0284c7;
+
+  /* Tipografías requeridas */
+  --font-heading: 'Baloo Bhai 2', cursive, system-ui, sans-serif;
+  --font-body: 'Lexend Deca', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Sombras sutiles */
+  --shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 18px 40px rgba(0, 0, 0, 0.1);
+  --shadow-active: 0 14px 32px rgba(234, 0, 41, 0.18);
+  
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  
+  --transition-smooth: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-fast: all 0.2s ease-out;
+}
+
+/* RESET GENERAL */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-pure);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* CANVAS DE CONFETI */
+#confetti-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* EMOJIS DE CARRERAS QUE SALTAN AL PASAR EL CURSOR SOBRE 'DISEÑADOR' */
+.jumping-career-emoji {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10000;
+  font-size: 2.2rem;
+  user-select: none;
+  line-height: 1;
+  animation: emojiJumpFloat 1.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes emojiJumpFloat {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.2) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(calc(var(--dx) * 0.45), calc(var(--dy) * 0.7)) scale(1.35) rotate(var(--rot));
+  }
+  65% {
+    opacity: 1;
+    transform: translate(var(--dx), var(--dy)) scale(1.1) rotate(calc(var(--rot) * 1.5));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dx) * 1.2), calc(var(--dy) - 30px)) scale(0.7) rotate(calc(var(--rot) * 2));
+  }
+}
+
+/* ENVOLTORIO ANCHO COMPLETO */
+.fullwidth-app {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-pure);
+}
+
+/* ==========================================================
+   HEADER SUPERIOR ÚNICO
+   ========================================================== */
+.site-header {
+  width: 100%;
+  background: var(--bg-pure);
+  border-bottom: 1px solid var(--border-light);
+  padding: 18px clamp(20px, 4.5vw, 64px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.header-logo-link:hover {
+  opacity: 0.88;
+}
+
+.metro-header-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-nav-btn {
+  background: transparent;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 8px 18px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--metro-slate);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.header-nav-btn:hover {
+  border-color: var(--metro-red);
+  color: var(--metro-red);
+  background: var(--metro-red-light);
+}
+
+.sound-toggle-btn {
+  background: #ffffff;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-full);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--metro-slate);
+  transition: var(--transition-fast);
+}
+
+.sound-toggle-btn:hover {
+  border-color: var(--metro-red);
+  color: var(--metro-red);
+  transform: scale(1.05);
+}
+
+.sound-toggle-btn.is-active {
+  border-color: var(--metro-red);
+  color: var(--metro-red);
+  background: var(--metro-red-light);
+}
+
+.sound-svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==========================================================
+   SISTEMA DE PANTALLAS (SPA)
+   ========================================================== */
+.site-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  display: none;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  width: 100%;
+  flex: 1;
+}
+
+.screen.active {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================
+   PANTALLA 1: PRESENTACIÓN (HERO CENTRADO Y LIMPIO)
+   ========================================================== */
+#screen-welcome {
+  justify-content: center;
+  align-items: center;
+  padding: clamp(40px, 8vh, 100px) clamp(20px, 4.5vw, 64px);
+}
+
+.welcome-hero-content {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.main-hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(3.6rem, 7.8vw, 6.2rem);
+  font-weight: 800;
+  line-height: 1.08;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+  letter-spacing: -0.5px;
+}
+
+.highlight-designer {
+  color: var(--metro-red);
+  font-style: normal; /* Sin cursiva según requerimiento */
+  font-weight: 800;
+  font-size: 1.15em; /* Más grande que las otras palabras */
+  display: inline-block;
+  padding: 0 6px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.highlight-designer:hover {
+  transform: scale(1.05);
+}
+
+.hero-helper-text {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 700px;
+  margin: 0 auto 36px;
+  font-weight: 400;
+}
+
+/* Input del Nombre */
+.student-name-box {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto 36px;
+  text-align: left;
+}
+
+.name-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--metro-slate);
+  margin-bottom: 8px;
+}
+
+.optional-hint {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.name-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+}
+
+.name-input:focus {
+  outline: none;
+  border-color: var(--metro-red);
+  box-shadow: 0 0 0 4px var(--metro-red-glow);
+}
+
+/* Botón principal */
+.btn-primary-creative {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--metro-red);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  padding: 18px 48px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 28px var(--metro-red-glow);
+  transition: var(--transition-smooth);
+}
+
+.btn-primary-creative:hover {
+  background: var(--metro-red-dark);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 16px 36px var(--metro-red-glow);
+}
+
+.btn-primary-creative:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-arrow-svg {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.2s ease;
+}
+
+.btn-primary-creative:hover .btn-arrow-svg {
+  transform: translateX(5px);
+}
+
+/* ==========================================================
+   PANTALLA 2: PREGUNTAS (ESTILO IMAGE 4 - 4 COLUMNAS)
+   ========================================================== */
+#screen-quiz {
+  padding: 32px clamp(20px, 4.5vw, 64px) 60px;
+}
+
+.quiz-fullwidth-wrapper {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+/* Barra superior de navegación dentro del quiz - Centrada y perfectamente alineada */
+.quiz-top-bar {
+  display: grid;
+  grid-template-columns: 110px 1fr 110px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 36px;
+  width: 100%;
+}
+
+.quiz-back-btn {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 9px 20px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--metro-slate);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.quiz-back-btn:hover {
+  border-color: var(--metro-red);
+  color: var(--metro-red);
+  background: var(--metro-red-light);
+}
+
+.quiz-back-btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.quiz-progress-center {
+  width: 100%;
+  max-width: 580px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quiz-top-spacer {
+  width: 110px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--metro-red);
+  border-radius: var(--radius-full);
+  transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Área del título de la pregunta */
+.question-title-area {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 44px;
+}
+
+/* Pastilla 'Pregunta X de 6' (Única indicación de paso, estilo Image 2) */
+.question-kicker {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--metro-red);
+  background: #fff1f2;
+  border: 1px solid rgba(234, 0, 41, 0.15);
+  padding: 8px 24px;
+  border-radius: var(--radius-full);
+  margin-bottom: 18px;
+  letter-spacing: 0.2px;
+}
+
+.question-main-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.22;
+  color: var(--text-primary);
+}
+
+/* 4 OPCIONES EN FILA / CUADRÍCULA ESTILO STICKY-NOTE (IMAGE 4) */
+.options-four-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: 100%;
+}
+
+.option-card {
+  background: #ffffff;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 30px 24px 26px;
+  min-height: 270px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-smooth);
+  user-select: none;
+}
+
+/* Pestaña / cinta superior estilo tarjeta (Image 4) */
+.option-card::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 22px;
+  border-radius: 4px;
+  opacity: 0.85;
+  transition: var(--transition-fast);
+}
+
+.card-tab-a::before { background: #fda4af; }
+.card-tab-b::before { background: #86efac; }
+.card-tab-c::before { background: #fde047; }
+.card-tab-d::before { background: #7dd3fc; }
+
+.option-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.option-badge-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  transition: var(--transition-fast);
+}
+
+.card-tab-a .option-badge-letter { background: var(--opt-a-bg); color: var(--opt-a-accent); }
+.card-tab-b .option-badge-letter { background: var(--opt-b-bg); color: var(--opt-b-accent); }
+.card-tab-c .option-badge-letter { background: var(--opt-c-bg); color: var(--opt-c-accent); }
+.card-tab-d .option-badge-letter { background: var(--opt-d-bg); color: var(--opt-d-accent); }
+
+.option-select-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.option-card-body {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+}
+
+.option-card-text {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* Hover en tarjeta */
+.option-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Estado Seleccionado */
+.option-card.selected {
+  border-color: var(--metro-red);
+  background: #fffafa;
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-active);
+}
+
+.option-card.selected .option-badge-letter {
+  background: var(--metro-red);
+  color: #ffffff;
+}
+
+.option-card.selected .option-select-dot {
+  background: var(--metro-red);
+  border-color: var(--metro-red);
+}
+
+.option-card.selected .option-select-dot::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* ==========================================================
+   PANTALLA 3: CALCULANDO
+   ========================================================== */
+#screen-calculating {
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px;
+}
+
+.calculating-fullwidth-content {
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.creative-loader-ring {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 30px;
+  border: 4px solid #f1f5f9;
+  border-top-color: var(--metro-red);
+  border-radius: 50%;
+  animation: spinLoader 0.9s linear infinite;
+}
+
+@keyframes spinLoader {
+  100% { transform: rotate(360deg); }
+}
+
+.calc-main-title {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.calc-sub-text {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================
+   PANTALLA 4: RESULTADO (ANCHO COMPLETO, 2 COLUMNAS, CLEAN)
+   ========================================================== */
+#screen-result {
+  padding: 40px clamp(20px, 4.5vw, 64px) 80px;
+}
+
+.result-fullwidth-wrapper {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.result-greeting-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: clamp(1.1rem, 2.2vw, 1.45rem);
+  font-weight: 500;
+  color: #475569;
+  letter-spacing: -0.25px;
+  margin-bottom: 12px;
+}
+
+/* Título con ZOOM GIGANTE */
+.winner-title-box {
+  margin-bottom: 24px;
+}
+
+.winner-career-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.8rem, 7.5vw, 5.2rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: var(--metro-red);
+  letter-spacing: -0.5px;
+  display: inline-block;
+  transform-origin: center center;
+}
+
+/* ZOOM ENTRANCE ANIMATION */
+.zoom-entrance {
+  animation: epicZoomIn 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes epicZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.15);
+    filter: blur(6px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.18);
+    filter: blur(0);
+  }
+  80% {
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.secondary-affinity-pill {
+  display: inline-block;
+  background: #fefce8;
+  border: 1.5px solid #fef08a;
+  border-radius: var(--radius-full);
+  padding: 8px 22px;
+  font-size: 0.95rem;
+  color: #854d0e;
+  margin-bottom: 32px;
+}
+
+/* DOS BLOQUES UNO AL LADO DEL OTRO */
+.result-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-bottom: 40px;
+  text-align: left;
+}
+
+.result-col-card {
+  background: #ffffff;
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32px 30px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-fast);
+}
+
+.card-description {
+  border-top: 5px solid var(--metro-slate);
+}
+
+.card-superpower {
+  border-top: 5px solid var(--metro-red);
+}
+
+.col-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--metro-slate);
+  margin-bottom: 12px;
+}
+
+.col-card-desc {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.superpower-highlight {
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--metro-red);
+}
+
+/* PODRÍAS DISEÑAR / CREAR: NUNCA SE CORTAN A LOS LADOS */
+.result-single-line-tags-section {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto 48px;
+  padding: 0 16px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.tags-section-heading {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--metro-slate);
+  margin-bottom: 18px;
+}
+
+.single-line-tags-strip {
+  display: flex;
+  flex-wrap: wrap; /* Permite acomodar todas las cajas sin cortarlas a la izquierda o derecha */
+  justify-content: center;
+  align-items: center;
+  gap: 12px 14px;
+  padding: 6px 0;
+  width: 100%;
+  overflow: visible;
+}
+
+/* TAGS: HOVER LEVE FLOTANTE QUE NO CAMBIA DE COLOR */
+.clean-tag-pill {
+  background: #ffffff;
+  border: 1.5px solid var(--border-light);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  font-weight: 500;
+  padding: 11px 24px;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-subtle);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: default;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.clean-tag-pill:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  /* El color de fondo y el color de texto NO cambian como se solicitó */
+}
+
+/* BOTÓN VOLVER A EMPEZAR */
+.result-restart-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.btn-restart-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--metro-slate);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 16px 36px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 8px 24px rgba(50, 62, 72, 0.16);
+}
+
+.btn-restart-action:hover {
+  background: var(--metro-slate-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(50, 62, 72, 0.24);
+}
+
+.btn-restart-action:active {
+  transform: translateY(0);
+}
+
+/* ==========================================================
+   FOOTER INSTITUCIONAL MÍNIMO
+   ========================================================== */
+.site-footer {
+  width: 100%;
+  border-top: 1px solid var(--border-light);
+  padding: 24px clamp(20px, 4.5vw, 64px);
+  text-align: center;
+  background: var(--bg-pure);
+}
+
+.site-footer p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ==========================================================
+   RESPONSIVIDAD Y TABLETS
+   ========================================================== */
+@media (max-width: 1080px) {
+  .options-four-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .result-two-columns {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .single-line-tags-strip {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .options-four-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .option-card {
+    min-height: auto;
+    padding: 24px 20px;
+  }
+
+  .quiz-top-bar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .quiz-progress-center {
+    order: 3;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .main-hero-title {
+    font-size: 2.5rem;
+  }
+
+  .winner-career-title {
+    font-size: 2.6rem;
+  }
+}

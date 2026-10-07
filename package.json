@@ -1,0 +1,17 @@
+{
+  "name": "que-disenador-soy",
+  "version": "1.0.0",
+  "description": "Test vocacional interactivo para el Instituto Metropolitano de Diseño - La Metro",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "la-metro",
+    "diseno",
+    "test-vocacional",
+    "colegio"
+  ],
+  "author": "La Metro",
+  "license": "MIT"
+}
