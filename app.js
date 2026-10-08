@@ -189,10 +189,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=8',
-  select: 'audio/select.wav?v=8',
-  fanfare: 'audio/fanfare.wav?v=8',
-  sparkle: 'audio/sparkle.wav?v=8'
+  pop: 'audio/pop.wav?v=9',
+  select: 'audio/select.wav?v=9',
+  fanfare: 'audio/fanfare.wav?v=9',
+  sparkle: 'audio/sparkle.wav?v=9'
 };
 
 function getAudioContext() {
@@ -796,6 +796,32 @@ function restartQuiz() {
   state.currentStepIndex = 0;
   state.answers = [];
   state.calculatedResult = null;
+  state.studentName = '';
+  state.studentAge = '';
+  state.studentPhone = '';
+  state.leadId = '';
+
+  const nameInput = document.getElementById('student-name-input');
+  const ageInput = document.getElementById('student-age-input');
+  const phoneInput = document.getElementById('student-phone-input');
+  const errorBanner = document.getElementById('form-error-msg');
+
+  if (nameInput) {
+    nameInput.value = '';
+    nameInput.classList.remove('is-invalid');
+  }
+  if (ageInput) {
+    ageInput.value = '';
+    ageInput.classList.remove('is-invalid');
+  }
+  if (phoneInput) {
+    phoneInput.value = '';
+    phoneInput.classList.remove('is-invalid');
+  }
+  if (errorBanner) {
+    errorBanner.style.display = 'none';
+  }
+
   showScreen('welcome');
 }
 
