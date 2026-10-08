@@ -8,7 +8,7 @@
 // Pega aquí la URL de la Web App generada en Apps Script:
 // (Ej: "https://script.google.com/macros/s/AKfycb.../exec")
 // ==========================================================
-const GOOGLE_SCRIPT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxtASmi_Z8gm3G8rX1qUQN76YvN6tCf0aGMz3FR8JZHqutG2PlUFHJlZE271NjAfAm1/exec';
+const GOOGLE_SCRIPT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz7uJyxxTHfD67RjVcEXk4a3PTEkWRBdicEDkmXjb5zRc5ehpOd4m8EeFCePRrcrmZE/exec';
 
 function sendLeadToGoogleSheet(action, extraData = {}) {
   const payload = {
@@ -189,10 +189,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=9',
-  select: 'audio/select.wav?v=9',
-  fanfare: 'audio/fanfare.wav?v=9',
-  sparkle: 'audio/sparkle.wav?v=9'
+  pop: 'audio/pop.wav?v=10',
+  select: 'audio/select.wav?v=10',
+  fanfare: 'audio/fanfare.wav?v=10',
+  sparkle: 'audio/sparkle.wav?v=10'
 };
 
 function getAudioContext() {
