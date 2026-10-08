@@ -189,10 +189,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=7',
-  select: 'audio/select.wav?v=7',
-  fanfare: 'audio/fanfare.wav?v=7',
-  sparkle: 'audio/sparkle.wav?v=7'
+  pop: 'audio/pop.wav?v=8',
+  select: 'audio/select.wav?v=8',
+  fanfare: 'audio/fanfare.wav?v=8',
+  sparkle: 'audio/sparkle.wav?v=8'
 };
 
 function getAudioContext() {
@@ -847,10 +847,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (ageInput) ageInput.focus();
     }
 
-    // Validación de Nombre y Apellido (mínimo 2 caracteres)
-    if (!nameVal || nameVal.length < 2) {
+    // Validación de Nombre y Apellido (mínimo 2 palabras completas)
+    const nameWords = nameVal.trim().split(/\s+/).filter(w => w.length >= 2);
+    if (!nameVal || nameWords.length < 2) {
       if (nameInput) nameInput.classList.add('is-invalid');
-      errorMessage = 'Por favor ingresa tu nombre y apellido.';
+      errorMessage = 'Por favor ingresa tu nombre y apellido (mínimo 2 palabras).';
       isValid = false;
       if (nameInput) nameInput.focus();
     }
