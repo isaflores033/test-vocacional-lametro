@@ -189,10 +189,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=6',
-  select: 'audio/select.wav?v=6',
-  fanfare: 'audio/fanfare.wav?v=6',
-  sparkle: 'audio/sparkle.wav?v=6'
+  pop: 'audio/pop.wav?v=7',
+  select: 'audio/select.wav?v=7',
+  fanfare: 'audio/fanfare.wav?v=7',
+  sparkle: 'audio/sparkle.wav?v=7'
 };
 
 function getAudioContext() {
@@ -829,11 +829,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ageInput) ageInput.classList.remove('is-invalid');
     if (phoneInput) phoneInput.classList.remove('is-invalid');
 
-    // Validación de Celular (al menos 7 dígitos)
+    // Validación de Celular (debe tener exactamente 10 dígitos)
     const phoneDigits = phoneVal.replace(/\D/g, '');
-    if (!phoneVal || phoneDigits.length < 7) {
+    if (!phoneVal || phoneDigits.length !== 10) {
       if (phoneInput) phoneInput.classList.add('is-invalid');
-      errorMessage = 'Por favor ingresa un número de celular válido.';
+      errorMessage = 'El número de celular debe tener exactamente 10 dígitos (ej. 0987876654).';
       isValid = false;
       if (phoneInput) phoneInput.focus();
     }
@@ -877,13 +877,17 @@ document.addEventListener('DOMContentLoaded', () => {
       errorBanner.style.display = 'none';
     }
 
-    return { nameVal, ageVal, phoneVal };
+    return { nameVal, ageVal, phoneVal: phoneDigits };
   }
 
   // Quitar el estado de error al escribir en cualquiera de los 3 campos
   [nameInput, ageInput, phoneInput].forEach(input => {
     if (input) {
       input.addEventListener('input', () => {
+        if (input === phoneInput) {
+          // Filtrar estrictamente solo números y limitar a 10 dígitos exactos
+          input.value = input.value.replace(/\D/g, '').slice(0, 10);
+        }
         input.classList.remove('is-invalid');
         if (errorBanner) errorBanner.style.display = 'none';
       });

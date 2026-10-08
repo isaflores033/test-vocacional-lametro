@@ -414,6 +414,8 @@ html, body {
   cursor: pointer;
   box-shadow: 0 10px 28px var(--metro-red-glow);
   transition: var(--transition-smooth);
+  margin-top: 16px;
+  align-self: center;
 }
 
 .btn-primary-creative:hover {
