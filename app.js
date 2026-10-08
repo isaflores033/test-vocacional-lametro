@@ -8,7 +8,7 @@
 // Pega aquí la URL de la Web App generada en Apps Script:
 // (Ej: "https://script.google.com/macros/s/AKfycb.../exec")
 // ==========================================================
-const GOOGLE_SCRIPT_WEBAPP_URL = '';
+const GOOGLE_SCRIPT_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxtASmi_Z8gm3G8rX1qUQN76YvN6tCf0aGMz3FR8JZHqutG2PlUFHJlZE271NjAfAm1/exec';
 
 function sendLeadToGoogleSheet(action, extraData = {}) {
   const payload = {
