@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Lexend+Deca:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
   <!-- Canvas para lluvia de confeti celebratoria -->
@@ -69,20 +69,50 @@
             No hay respuestas correctas o incorrectas. Elige la opción que más vibre contigo.
           </p>
 
-          <!-- Input para el nombre (opcional) -->
-          <div class="student-name-box">
-            <label for="student-name-input" class="name-label">¿Cómo te llamas? <span class="optional-hint">(Opcional)</span></label>
-            <input type="text" id="student-name-input" class="name-input" placeholder="Escribe tu nombre..." maxlength="30" autocomplete="given-name">
-          </div>
+          <!-- Formulario con las 3 cajitas obligatorias -->
+          <form id="student-lead-form" class="student-lead-form" novalidate onsubmit="return false;">
+            <div class="form-field-group">
+              <label for="student-name-input" class="lead-label">
+                Nombre y Apellido <span class="required-star">*</span>
+              </label>
+              <input type="text" id="student-name-input" class="lead-input" placeholder="Ej. Camila Morales" maxlength="50" required autocomplete="name">
+            </div>
 
-          <!-- Botón principal de inicio -->
-          <button id="btn-start" class="btn-primary-creative">
-            <span>Empezar el test</span>
-            <svg class="btn-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
+            <div class="form-grid-two">
+              <div class="form-field-group field-age">
+                <label for="student-age-input" class="lead-label">
+                  Edad <span class="required-star">*</span>
+                </label>
+                <input type="number" id="student-age-input" class="lead-input" placeholder="Ej. 17" min="10" max="99" required autocomplete="off">
+              </div>
+
+              <div class="form-field-group field-phone">
+                <label for="student-phone-input" class="lead-label">
+                  Número de celular <span class="required-star">*</span>
+                </label>
+                <input type="tel" id="student-phone-input" class="lead-input" placeholder="Ej. 0991234567" maxlength="15" required autocomplete="tel">
+              </div>
+            </div>
+
+            <!-- Mensaje de validación / error -->
+            <div id="form-error-msg" class="lead-error-banner" style="display: none;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              <span id="form-error-text">Por favor completa los 3 campos obligatorios para comenzar.</span>
+            </div>
+
+            <!-- Botón principal de inicio -->
+            <button id="btn-start" type="button" class="btn-primary-creative">
+              <span>Empezar el test</span>
+              <svg class="btn-arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
 
         </div>
       </section>
@@ -208,6 +238,6 @@
 
   </div>
 
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

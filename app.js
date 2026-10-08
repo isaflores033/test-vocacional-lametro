@@ -4,6 +4,46 @@
  */
 
 // ==========================================================
+// CONFIGURACIÓN DE INTEGRACIÓN CON GOOGLE SHEETS
+// Pega aquí la URL de la Web App generada en Apps Script:
+// (Ej: "https://script.google.com/macros/s/AKfycb.../exec")
+// ==========================================================
+const GOOGLE_SCRIPT_WEBAPP_URL = '';
+
+function sendLeadToGoogleSheet(action, extraData = {}) {
+  const payload = {
+    action: action, // 'start' o 'complete'
+    id: state.leadId,
+    nombre: state.studentName,
+    edad: state.studentAge,
+    celular: state.studentPhone,
+    ...extraData
+  };
+
+  if (!GOOGLE_SCRIPT_WEBAPP_URL || !GOOGLE_SCRIPT_WEBAPP_URL.startsWith('http')) {
+    console.log('[Google Sheets Demo] Datos listos para enviar:', payload);
+    return;
+  }
+
+  try {
+    fetch(GOOGLE_SCRIPT_WEBAPP_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Evita bloqueos de CORS en Google Apps Script
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify(payload)
+    }).then(() => {
+      console.log('[Google Sheets] Lead sincronizado exitosamente:', action);
+    }).catch(err => {
+      console.warn('[Google Sheets] Error al enviar registro:', err);
+    });
+  } catch (e) {
+    console.warn('[Google Sheets] Excepción al enviar registro:', e);
+  }
+}
+
+// ==========================================================
 // 1. BASE DE DATOS DE LAS 7 CARRERAS DE LA METRO
 // ==========================================================
 const CAREERS = {
@@ -138,6 +178,9 @@ const state = {
   currentStepIndex: 0,
   answers: [], // { questionIndex, selectedKey, career }
   studentName: '',
+  studentAge: '',
+  studentPhone: '',
+  leadId: '',
   soundEnabled: false, // Inicia desactivado por defecto
   calculatedResult: null
 };
@@ -146,10 +189,10 @@ const state = {
 // 4. MOTOR DE AUDIO NATIVO Y DUAL (ARCHIVOS REALES + FALLBACK)
 // ==========================================================
 const SOUND_FILES = {
-  pop: 'audio/pop.wav?v=5',
-  select: 'audio/select.wav?v=5',
-  fanfare: 'audio/fanfare.wav?v=5',
-  sparkle: 'audio/sparkle.wav?v=5'
+  pop: 'audio/pop.wav?v=6',
+  select: 'audio/select.wav?v=6',
+  fanfare: 'audio/fanfare.wav?v=6',
+  sparkle: 'audio/sparkle.wav?v=6'
 };
 
 function getAudioContext() {
@@ -426,7 +469,8 @@ function showScreen(screenName) {
 
 function formatName(name) {
   if (!name) return '';
-  return name.trim().charAt(0).toUpperCase() + name.trim().slice(1).toLowerCase();
+  const first = name.trim().split(/\s+/)[0];
+  return first.charAt(0).toUpperCase() + first.slice(1).toLowerCase();
 }
 
 // ==========================================================
@@ -638,6 +682,12 @@ function renderResultScreen(resultData) {
       tagsCloudEl.appendChild(span);
     });
   }
+
+  // Sincronizar resultado en Google Sheets
+  sendLeadToGoogleSheet('complete', {
+    carrera: winner.name,
+    afinidadSecundaria: secondary ? secondary.name : 'Ninguna'
+  });
 }
 
 function triggerWinnerZoomEffect() {
@@ -758,29 +808,115 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Configurar emojis interactivos al pasar el cursor sobre 'diseñador'
   setupDesignerEmojis();
 
-  // 2. Botón Comenzar
+  // 2. Formulario de 3 cajitas obligatorias y Botón Comenzar
   const startBtn = document.getElementById('btn-start');
   const nameInput = document.getElementById('student-name-input');
+  const ageInput = document.getElementById('student-age-input');
+  const phoneInput = document.getElementById('student-phone-input');
+  const errorBanner = document.getElementById('form-error-msg');
+  const errorText = document.getElementById('form-error-text');
+
+  function validateLeadForm() {
+    let isValid = true;
+    let errorMessage = '';
+
+    const nameVal = nameInput ? nameInput.value.trim() : '';
+    const ageVal = ageInput ? ageInput.value.trim() : '';
+    const phoneVal = phoneInput ? phoneInput.value.trim() : '';
+
+    // Limpiar errores visuales previos
+    if (nameInput) nameInput.classList.remove('is-invalid');
+    if (ageInput) ageInput.classList.remove('is-invalid');
+    if (phoneInput) phoneInput.classList.remove('is-invalid');
+
+    // Validación de Celular (al menos 7 dígitos)
+    const phoneDigits = phoneVal.replace(/\D/g, '');
+    if (!phoneVal || phoneDigits.length < 7) {
+      if (phoneInput) phoneInput.classList.add('is-invalid');
+      errorMessage = 'Por favor ingresa un número de celular válido.';
+      isValid = false;
+      if (phoneInput) phoneInput.focus();
+    }
+
+    // Validación de Edad (número entre 10 y 99)
+    const ageNum = parseInt(ageVal, 10);
+    if (!ageVal || isNaN(ageNum) || ageNum < 10 || ageNum > 99) {
+      if (ageInput) ageInput.classList.add('is-invalid');
+      errorMessage = 'Por favor ingresa una edad válida.';
+      isValid = false;
+      if (ageInput) ageInput.focus();
+    }
+
+    // Validación de Nombre y Apellido (mínimo 2 caracteres)
+    if (!nameVal || nameVal.length < 2) {
+      if (nameInput) nameInput.classList.add('is-invalid');
+      errorMessage = 'Por favor ingresa tu nombre y apellido.';
+      isValid = false;
+      if (nameInput) nameInput.focus();
+    }
+
+    // Si todos los campos están vacíos
+    if (!nameVal && !ageVal && !phoneVal) {
+      if (nameInput) nameInput.classList.add('is-invalid');
+      if (ageInput) ageInput.classList.add('is-invalid');
+      if (phoneInput) phoneInput.classList.add('is-invalid');
+      errorMessage = 'Por favor completa los 3 campos obligatorios para comenzar.';
+      isValid = false;
+      if (nameInput) nameInput.focus();
+    }
+
+    if (!isValid) {
+      if (errorBanner && errorText) {
+        errorText.textContent = errorMessage;
+        errorBanner.style.display = 'flex';
+      }
+      return false;
+    }
+
+    if (errorBanner) {
+      errorBanner.style.display = 'none';
+    }
+
+    return { nameVal, ageVal, phoneVal };
+  }
+
+  // Quitar el estado de error al escribir en cualquiera de los 3 campos
+  [nameInput, ageInput, phoneInput].forEach(input => {
+    if (input) {
+      input.addEventListener('input', () => {
+        input.classList.remove('is-invalid');
+        if (errorBanner) errorBanner.style.display = 'none';
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          if (startBtn) startBtn.click();
+        }
+      });
+    }
+  });
 
   if (startBtn) {
     startBtn.addEventListener('click', () => {
       unlockAudio();
-      playSound('pop');
-      if (nameInput) {
-        state.studentName = nameInput.value.trim();
+      const validation = validateLeadForm();
+      if (!validation) {
+        return; // No avanza si faltan campos obligatorios
       }
+
+      playSound('pop');
+
+      state.studentName = validation.nameVal;
+      state.studentAge = validation.ageVal;
+      state.studentPhone = validation.phoneVal;
+      state.leadId = 'LEAD_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+
+      // Registrar inicio del lead en Google Sheets
+      sendLeadToGoogleSheet('start', { carrera: 'En progreso...' });
+
       state.currentStepIndex = 0;
       state.answers = [];
       showScreen('quiz');
       renderCurrentQuestion();
-    });
-  }
-
-  if (nameInput) {
-    nameInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        startBtn.click();
-      }
     });
   }
 

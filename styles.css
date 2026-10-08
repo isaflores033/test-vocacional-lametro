@@ -293,31 +293,56 @@ html, body {
   font-weight: 400;
 }
 
-/* Input del Nombre */
-.student-name-box {
+/* Formulario de 3 cajitas obligatorias */
+.student-lead-form {
   width: 100%;
-  max-width: 440px;
+  max-width: 480px;
   margin: 0 auto 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   text-align: left;
 }
 
-.name-label {
-  display: block;
+.form-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.form-grid-two {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+}
+
+.field-age {
+  flex: 0 0 130px;
+}
+
+.field-phone {
+  flex: 1;
+}
+
+.lead-label {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-body);
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--metro-slate);
-  margin-bottom: 8px;
 }
 
-.optional-hint {
-  font-weight: 400;
-  color: var(--text-muted);
-  font-size: 0.85rem;
+.required-star {
+  color: var(--metro-red);
+  font-weight: 700;
+  margin-left: 3px;
 }
 
-.name-input {
+.lead-input {
   width: 100%;
-  padding: 16px 20px;
+  padding: 14px 18px;
   font-family: var(--font-body);
   font-size: 1.05rem;
   border: 2px solid var(--border-light);
@@ -325,12 +350,51 @@ html, body {
   background: #ffffff;
   color: var(--text-primary);
   transition: var(--transition-fast);
+  box-sizing: border-box;
 }
 
-.name-input:focus {
+.lead-input:focus {
   outline: none;
   border-color: var(--metro-red);
   box-shadow: 0 0 0 4px var(--metro-red-glow);
+}
+
+.lead-input.is-invalid {
+  border-color: var(--metro-red);
+  background-color: #fff8f8;
+  box-shadow: 0 0 0 3px rgba(234, 0, 41, 0.15);
+}
+
+.lead-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background-color: #fde8eb;
+  border: 1px solid #f8b4bc;
+  color: var(--metro-red);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+  line-height: 1.4;
+  animation: shakeError 0.35s ease;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+@media (max-width: 480px) {
+  .form-grid-two {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .field-age {
+    flex: 1;
+  }
 }
 
 /* Botón principal */
